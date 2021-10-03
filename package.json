@@ -1,0 +1,25 @@
+{
+  "name": "mmm-nyc-busses",
+  "version": "1.0.0",
+  "description": "Magic Mirror module for realtime nyc mta bus arrivals",
+  "main": "MMM-nyc-busses.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikekutzma/MMM-nyc-busses.git"
+  },
+  "keywords": [
+    "MagicMirror",
+    "MMM",
+    "mta",
+    "busses"
+  ],
+  "author": "Mike Kutzma <michaelkutzma@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mikekutzma/MMM-nyc-busses/issues"
+  },
+  "homepage": "https://github.com/mikekutzma/MMM-nyc-busses#readme"
+}

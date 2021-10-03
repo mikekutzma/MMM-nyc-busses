@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="id01"></div>
+
+<script>
+var xmlhttp = new XMLHttpRequest();
+var url = "https://bustime.mta.info/api/siri/stop-monitoring.json?key=66bedb63-9c9f-4cd4-b3b1-bb6cae656be2&version=2&OperatorRef=MTA&MonitoringRef=404029";
+
+
+xmlhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    var data = JSON.parse(this.responseText);
+    myFunction(data);
+  }
+};
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
+
+function myFunction(data) {
+    var arrivals = data.Siri.ServiceDelivery.StopMonitoringDelivery[0].MonitoredStopVisit;
+    var arrival_dict = {};
+    
+    // Build dict of station: list of arrivals
+    var current_timestamp = new Date().getTime();
+    for(i = 0; i < arrivals.length; i++) {
+        var lineName = arrivals[i].MonitoredVehicleJourney.PublishedLineName[0];
+        var expectedTime = arrivals[i].MonitoredVehicleJourney.MonitoredCall.ExpectedArrivalTime;
+        var expected_timestamp = new Date(expectedTime).getTime();
+
+        // Convert to time delta from current time
+        var minutes_away = 
+            Math.floor(((expected_timestamp - current_timestamp) / 1000)/ 60);
+        if (minutes_away < 1) {
+            var expectation_text = "<1 min";
+        } else {
+            var expectation_text = `${minutes_away} min`;
+        }
+
+        // Add to data store
+        if (arrival_dict.hasOwnProperty(lineName)) {
+            arrival_dict[lineName].push(expectation_text);
+        } else {
+            arrival_dict[lineName] = [expectation_text];
+        }
+    }
+
+    // Now iterate through the dict and build the html
+    var out = "<ul>\n";
+    for (const [lineName, lineArrivals] of Object.entries(arrival_dict)) {
+        out += '<li><b>' + lineName+ ':</b> ' + lineArrivals.join(", ") + '</li>';
+    }
+    out += '</ul>';
+
+    document.getElementById("id01").innerHTML = out;
+}
+</script>
+
+</body>
+</html>
